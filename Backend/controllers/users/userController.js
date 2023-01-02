@@ -106,6 +106,42 @@ const whoViewedMyProfileController = async (req, res, next) => {
   }
 };
 
+//Following
+const followingController = async (req, res, next) => {
+  try {
+    //1. Find the user to follow
+    const userToFollow = await User.findById(req.params.id);
+
+    //2. Find the user who is following
+    const userWhoFollowed = await User.findById(req.userAuth);
+
+    //3. Check if user and userWhoFollowed are found
+    if (userToFollow && userWhoFollowed) {
+      //4. Check if userWhoFollowed is already in users followers array
+      const isUserAlreadyFollowed = userToFollow.following.find(
+        (follower) => follower.toString() === userWhoFollowed._id.toString()
+      );
+      if (isUserAlreadyFollowed) {
+        return next(appErr("You already followed this user"));
+      } else {
+        //5. Push the userWhoFOlloed to user's followers array
+        userToFollow.followers.push(userWhoFollowed._id);
+        //6. Push the userToFollow to userWhoFollowed's following array
+        userWhoFollowed.following.push(userToFollow._id);
+        //6. Save the users
+        await userWhoFollowed.save();
+        await userToFollow.save();
+        res.json({
+          status: "success",
+          data: "You have successfully followed this user",
+        });
+      }
+    }
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
 //Get users
 const usersController = async (req, res) => {
   try {
@@ -204,4 +240,5 @@ module.exports = {
   userDeleteController,
   profilePhotoUploadController,
   whoViewedMyProfileController,
+  followingController,
 };

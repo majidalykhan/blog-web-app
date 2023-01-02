@@ -9,6 +9,7 @@ const {
   userDeleteController,
   profilePhotoUploadController,
   whoViewedMyProfileController,
+  followingController,
 } = require("../../controllers/users/userController");
 const isLogin = require("../../middlewares/isLogin");
 const multer = require("multer");
@@ -33,11 +34,14 @@ userRouter.get("/profile/", isLogin, userProfileController);
 //PUT/api/v1/users/:id
 userRouter.put("/:id", userUpdateController);
 
+//DELETE/api/v1/users/:id
+userRouter.delete("/:id", userDeleteController);
+
 //GET/api/v1/users/profile-viewers/:id
 userRouter.get("/profile-viewers/:id", isLogin, whoViewedMyProfileController);
 
-//DELETE/api/v1/users/:id
-userRouter.delete("/:id", userDeleteController);
+//GET/api/v1/users/following/:id
+userRouter.get("/following/:id", isLogin, followingController);
 
 //POST/api/v1/users/profile-photo-upload
 userRouter.post(
