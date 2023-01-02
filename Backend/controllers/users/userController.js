@@ -80,10 +80,12 @@ const usersController = async (req, res) => {
 
 //User profile
 const userProfileController = async (req, res) => {
+  const { id } = req.params;
   try {
+    const user = await User.findById(id);
     res.json({
       status: "success",
-      data: "Profile route",
+      data: user,
     });
   } catch (error) {
     res.json(error.message);
