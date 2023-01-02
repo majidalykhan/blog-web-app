@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../../model/User/User");
+const generateToken = require("../../utils/generateToken");
 
 //Register
 const userRegisterController = async (req, res) => {
@@ -59,7 +60,13 @@ const userLoginController = async (req, res) => {
   try {
     res.json({
       status: "success",
-      data: userFound,
+      data: {
+        firstName: userFound.firstName,
+        lastName: userFound.lastName,
+        email: userFound.email,
+        isAdmin: userFound.isAdmin,
+        token: generateToken(userFound._id),
+      },
     });
   } catch (error) {
     res.json(error.message);
