@@ -33,6 +33,24 @@ const userRegisterController = async (req, res) => {
 
 //Login
 const userLoginController = async (req, res) => {
+  const { email, password } = req.body;
+
+  //Check if email exist
+  const userFound = await User.findOne({ email });
+  if (!userFound) {
+    return res.json({
+      msg: "Wrong login credentials",
+    });
+  }
+
+  //Password validity
+  const isPasswordMatched = await User.findOne({ password });
+  if (!isPasswordMatched) {
+    return res.json({
+      msg: "Wrong login credentials",
+    });
+  }
+
   try {
     res.json({
       status: "success",
