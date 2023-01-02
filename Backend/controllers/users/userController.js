@@ -122,6 +122,18 @@ const userDeleteController = async (req, res) => {
   }
 };
 
+//Profile photo upload
+const profilePhotoUploadController = async (req, res) => {
+  try {
+    res.json({
+      status: "success",
+      data: "Profile photo upload",
+    });
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
 module.exports = {
   userRegisterController,
   userLoginController,
@@ -129,4 +141,5 @@ module.exports = {
   userProfileController,
   userUpdateController,
   userDeleteController,
+  profilePhotoUploadController,
 };

@@ -1,4 +1,5 @@
 const cloudinary = require("cloudinary").v2;
+require("dotenv").config();
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 //Configure cloudinary
@@ -14,7 +15,7 @@ const storage = new CloudinaryStorage({
   allowedFormats: ["jpg", "png"],
   params: {
     folder: "blog-api",
-    transformation: [{ width: 500, height: 500, crop: "Limit" }],
+    transformation: [{ width: 500, height: 500, crop: "limit" }],
   },
 });
 
