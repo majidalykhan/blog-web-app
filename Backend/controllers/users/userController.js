@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../../model/User/User");
+const appErr = require("../../utils/appErr");
 const generateToken = require("../../utils/generateToken");
 const getTokenFromHeader = require("../../utils/getTokenFromHeader");
 
@@ -10,7 +11,7 @@ const userRegisterController = async (req, res, next) => {
     //Check if email exist
     const userFound = await User.findOne({ email });
     if (userFound) {
-      return next(new Error("User already exist"));
+      return next(appErr("User already exist"));
     }
 
     //Hash password

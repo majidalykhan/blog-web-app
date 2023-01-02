@@ -1,4 +1,5 @@
 const express = require("express");
+const globalErrHandler = require("./middlewares/globalErrHandler");
 const categoryRouter = require("./routes/categories/categoryRoutes");
 const commentRouter = require("./routes/comments/commentRoutes");
 const postRouter = require("./routes/posts/postRoutes");
@@ -30,17 +31,12 @@ app.use("/api/v1/categories/", categoryRouter);
 //--------------------------------------------------
 
 //Error handling middlewares
-app.use((err, req, res, next) => {
-  const stack = err.stack;
-  const message = err.message;
-  const status = err.status ? err.status : "failed";
-  const statusCode = err?.statusCode ? err.statusCode : 500;
+app.use(globalErrHandler);
 
-  //send the response
-  res.status(statusCode).json({
-    stack,
-    status,
-    message,
+//404 error
+app.use("*", (req, res) => {
+  res.status(404).json({
+    message: `${req.originalUrl} - Not found`,
   });
 });
 
