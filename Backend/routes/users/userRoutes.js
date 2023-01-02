@@ -38,6 +38,7 @@ userRouter.delete("/:id", userDeleteController);
 //DELETE/api/v1/users/profile-photo-upload
 userRouter.post(
   "/profile-photo-upload",
+  isLogin,
   upload.single("profile"),
   profilePhotoUploadController
 );
