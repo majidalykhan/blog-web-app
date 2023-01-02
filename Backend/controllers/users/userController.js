@@ -88,11 +88,8 @@ const usersController = async (req, res) => {
 
 //User profile
 const userProfileController = async (req, res) => {
-  const token = getTokenFromHeader(req);
-  console.log(token);
-  const { id } = req.params;
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(req.userAuth);
     res.json({
       status: "success",
       data: user,

@@ -21,7 +21,7 @@ userRouter.post("/login", userLoginController);
 userRouter.get("/", usersController);
 
 //GET/api/v1/users/:id
-userRouter.get("/profile/:id", isLogin, userProfileController);
+userRouter.get("/profile/", isLogin, userProfileController);
 
 //PUT/api/v1/users/:id
 userRouter.put("/:id", userUpdateController);
