@@ -6,10 +6,7 @@ const getTokenFromHeader = (req) => {
   if (token !== undefined) {
     return token;
   } else {
-    return {
-      status: "failed",
-      message: "There is no token attached to the header",
-    };
+    return false;
   }
 };
 
