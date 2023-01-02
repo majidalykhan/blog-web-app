@@ -10,6 +10,7 @@ require("./config/dbConnect");
 const app = express();
 
 //Middlewares
+app.use(express.json()); //Pass incoming payload
 
 //---------------------------------------------------
 
