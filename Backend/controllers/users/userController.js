@@ -73,6 +73,39 @@ const userLoginController = async (req, res) => {
   }
 };
 
+//Who view my profile
+const whoViewedMyProfileController = async (req, res, next) => {
+  try {
+    //1. Find the original
+    const user = await User.findById(req.params.id);
+
+    //2. Find the user who viewed the original user
+    const userWhoViewed = await User.findById(req.userAuth);
+
+    //3. Check if original user and who viewed are found
+    if (user && userWhoViewed) {
+      //4. Check if user who viewed is already in users viewers array
+      const isUserALreadyViewed = user.viewers.find(
+        (viewer) => viewer.toString() === userWhoViewed._id.toJSON()
+      );
+      if (isUserALreadyViewed) {
+        return next(appErr("You already viewed this profile"));
+      } else {
+        //5. Push the userWhoViewed to user's viewers array
+        user.viewers.push(userWhoViewed._id);
+        //6. Save the user
+        await user.save();
+        res.json({
+          status: "success",
+          data: "You have successfully viewed this profile",
+        });
+      }
+    }
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
 //Get users
 const usersController = async (req, res) => {
   try {
@@ -170,4 +203,5 @@ module.exports = {
   userUpdateController,
   userDeleteController,
   profilePhotoUploadController,
+  whoViewedMyProfileController,
 };
