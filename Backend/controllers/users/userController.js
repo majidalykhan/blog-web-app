@@ -1,4 +1,7 @@
 const bcrypt = require("bcrypt");
+const Category = require("../../model/Category/Category");
+const Comment = require("../../model/Comment/Comment");
+const Post = require("../../model/Post/Post");
 const User = require("../../model/User/User");
 const appErr = require("../../utils/appErr");
 const generateToken = require("../../utils/generateToken");
@@ -387,12 +390,23 @@ const updatePasswordController = async (req, res, next) => {
   }
 };
 
-//Delete
-const userDeleteController = async (req, res) => {
+//Delete account
+const deleteUserAccountController = async (req, res, next) => {
   try {
-    res.json({
+    //1. Find the user to be deleted
+    const userToDelete = await User.findById(req.userAuth);
+    //2. Find all posts to be deleted
+    await Post.deleteMany({ user: req.userAuth });
+    //3. Delete all comments of the user
+    await Comment.deleteMany({ user: req.userAuth });
+    //4. Delete all categories of the user
+    await Category.deleteMany({ user: req.userAuth });
+    //5. Delete
+    await userToDelete.delete();
+
+    return res.json({
       status: "success",
-      data: "delete user route",
+      data: "Your account has been deleted successfully",
     });
   } catch (error) {
     res.json(error.message);
@@ -445,7 +459,6 @@ module.exports = {
   usersController,
   userProfileController,
   userUpdateController,
-  userDeleteController,
   profilePhotoUploadController,
   whoViewedMyProfileController,
   followingController,
@@ -455,4 +468,5 @@ module.exports = {
   adminBlockUserController,
   adminUnBlockUserController,
   updatePasswordController,
+  deleteUserAccountController,
 };
