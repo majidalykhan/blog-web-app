@@ -2,7 +2,7 @@ const Post = require("../../model/Post/Post");
 const User = require("../../model/User/User");
 
 //Create
-const postCreateController = async (req, res) => {
+const postCreateController = async (req, res, next) => {
   const { title, description } = req.body;
   try {
     //FInd the user
@@ -22,7 +22,7 @@ const postCreateController = async (req, res) => {
       data: postCreated,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 

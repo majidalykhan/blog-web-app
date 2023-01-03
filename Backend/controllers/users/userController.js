@@ -8,7 +8,7 @@ const generateToken = require("../../utils/generateToken");
 
 //Register
 const userRegisterController = async (req, res, next) => {
-  const { firstName, lastName, profilePhoto, email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
   try {
     //Check if email exist
     const userFound = await User.findOne({ email });
@@ -33,7 +33,7 @@ const userRegisterController = async (req, res, next) => {
       data: user,
     });
   } catch (error) {
-    next(new Error(error.message));
+    next(appErr(error.message));
   }
 };
 
@@ -45,18 +45,14 @@ const userLoginController = async (req, res) => {
   const userFound = await User.findOne({ email });
 
   if (!userFound) {
-    return res.json({
-      msg: "Invalid credentials",
-    });
+    return next(appErr("Invalid login credentials"));
   }
 
   //Verify password
   const isPasswordMatched = await bcrypt.compare(password, userFound.password);
 
   if (!isPasswordMatched) {
-    return res.json({
-      msg: "Invalid credentials",
-    });
+    return next(appErr("Invalid login credentials"));
   }
 
   try {
@@ -71,7 +67,7 @@ const userLoginController = async (req, res) => {
       },
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -104,7 +100,7 @@ const whoViewedMyProfileController = async (req, res, next) => {
       }
     }
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -140,7 +136,7 @@ const followingController = async (req, res, next) => {
       }
     }
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -183,7 +179,7 @@ const unfollowController = async (req, res, next) => {
       }
     }
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -218,7 +214,7 @@ const blockUserController = async (req, res, next) => {
       }
     }
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -255,7 +251,7 @@ const unblockUserController = async (req, res, next) => {
       }
     }
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -277,7 +273,7 @@ const adminBlockUserController = async (req, res, next) => {
       data: "You have successfully blocked the user",
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -299,12 +295,12 @@ const adminUnBlockUserController = async (req, res, next) => {
       data: "You have successfully unblocked the user",
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
 //Get users
-const usersController = async (req, res) => {
+const usersController = async (req, res, next) => {
   try {
     const user = await User.find();
     res.json({
@@ -312,12 +308,12 @@ const usersController = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
 //User profile
-const userProfileController = async (req, res) => {
+const userProfileController = async (req, res, next) => {
   try {
     const user = await User.findById(req.userAuth);
     res.json({
@@ -325,7 +321,7 @@ const userProfileController = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -360,7 +356,7 @@ const userUpdateController = async (req, res, next) => {
       data: user,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -386,7 +382,7 @@ const updatePasswordController = async (req, res, next) => {
       return next(appErr("Please provide password field"));
     }
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -409,7 +405,7 @@ const deleteUserAccountController = async (req, res, next) => {
       data: "Your account has been deleted successfully",
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
