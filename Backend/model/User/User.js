@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Post = require("../Post/Post");
 
 //Create schema
 
@@ -106,6 +107,30 @@ userSchema.pre("findOne", async function (next) {
   userSchema.virtual("lastPostDate").get(function () {
     return lastPostDateStr;
   });
+
+  //------------------ Check if a user is inactive for 30 days --------------//
+
+  //Get current date
+  const currentDate = new Date();
+
+  //Get the difference between last post and current date
+  const diff = currentDate - lastPostDate;
+
+  //Get the difference in days and return less than in days
+  const diffInDays = diff / (1000 * 3600 * 24);
+
+  if (diffInDays > 30) {
+    //Add virtuals isInActive to schema to check if a user is inactive for 30 days
+    userSchema.virtual("isInActive").get(function () {
+      return true;
+    });
+  } else {
+    userSchema.virtual("isInActive").get(function () {
+      return false;
+    });
+  }
+
+  next();
 });
 
 //Get fullname
