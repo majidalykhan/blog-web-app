@@ -219,6 +219,43 @@ const blockUserController = async (req, res, next) => {
   }
 };
 
+//Unblock user
+const unblockUserController = async (req, res, next) => {
+  try {
+    //1. Find the user to be unblocked
+    const userToBeUnBlocked = await User.findById(req.params.id);
+
+    //2. Find the user who is unblocking
+    const userWhoUnBlocked = await User.findById(req.userAuth);
+
+    //3. Check if userToUnBeBlocked and userWhoUnBlocked are found
+    if (userToBeUnBlocked && userWhoUnBlocked) {
+      //4. Check if userWhoUnBlocked is already in users unblocked array
+      const isUserAlreadyBlocked = userWhoUnBlocked.blocked.find(
+        (blocked) => blocked.toString() === userToBeUnBlocked._id.toString()
+      );
+      if (!isUserAlreadyBlocked) {
+        return next(appErr("You have not blocked this user"));
+      } else {
+        //5. Remove the userToBeUnBlocked from the main user
+        userWhoUnBlocked.blocked = userWhoUnBlocked.blocked.filter(
+          (blocked) => blocked.toString() !== userToBeUnBlocked._id.toString()
+        );
+
+        //6. Save
+        await userWhoUnBlocked.save();
+
+        res.json({
+          status: "success",
+          data: "You have successfully unblocked this user",
+        });
+      }
+    }
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
 //Get users
 const usersController = async (req, res) => {
   try {
@@ -320,4 +357,5 @@ module.exports = {
   followingController,
   unfollowController,
   blockUserController,
+  unblockUserController,
 };
