@@ -362,12 +362,26 @@ const userUpdateController = async (req, res, next) => {
 };
 
 //Update password
-const UpdatePasswordController = async (req, res) => {
+const updatePasswordController = async (req, res, next) => {
+  const { password } = req.body;
   try {
-    res.json({
-      status: "success",
-      data: "update password",
-    });
+    //Check if user updating the password
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      //update user
+      const user = await User.findByIdAndUpdate(
+        req.userAuth,
+        { password: hashedPassword },
+        { new: true, runValidators: true }
+      );
+      res.json({
+        status: "success",
+        data: "Password has been changed successfully",
+      });
+    } else {
+      return next(appErr("Please provide password field"));
+    }
   } catch (error) {
     res.json(error.message);
   }
@@ -440,4 +454,5 @@ module.exports = {
   unblockUserController,
   adminBlockUserController,
   adminUnBlockUserController,
+  updatePasswordController,
 };
