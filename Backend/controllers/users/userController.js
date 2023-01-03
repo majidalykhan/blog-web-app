@@ -303,9 +303,10 @@ const adminUnBlockUserController = async (req, res, next) => {
 //Get users
 const usersController = async (req, res) => {
   try {
+    const user = await User.find();
     res.json({
       status: "success",
-      data: "all users route",
+      data: user,
     });
   } catch (error) {
     res.json(error.message);

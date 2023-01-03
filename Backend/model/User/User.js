@@ -83,8 +83,14 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
   }
 );
+
+//Get fullname
+userSchema.virtual("fullname").get(function () {
+  return `${this.firstName} ${this.lastName}`;
+});
 
 //Compile the user model
 const User = mongoose.model("User", userSchema);
