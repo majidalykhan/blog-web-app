@@ -89,7 +89,7 @@ const userSchema = new mongoose.Schema(
 //Hooks
 //pre-before record is saved
 userSchema.pre("findOne", async function (next) {
-  //populate the post
+  //Populate the entire post instead of id
   this.populate({
     path: "posts",
   });
