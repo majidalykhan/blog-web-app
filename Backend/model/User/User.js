@@ -66,13 +66,11 @@ const userSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    plan: [
-      {
-        type: String,
-        enum: ["Free", "Premium", "Pro"],
-        default: "Free",
-      },
-    ],
+    // plan: {
+    //   type: String,
+    //   enum: ["Free", "Premium", "Pro"],
+    //   default: "Free",
+    // },
     userAward: [
       {
         type: String,
@@ -83,7 +81,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
+    toJSON: { virtuals: true }, //to get virtuals in json response from server to client
   }
 );
 
