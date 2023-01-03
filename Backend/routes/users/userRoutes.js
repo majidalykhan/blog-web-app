@@ -37,7 +37,7 @@ userRouter.get("/", usersController);
 userRouter.get("/profile/", isLogin, userProfileController);
 
 //PUT/api/v1/users/:id
-userRouter.put("/:id", userUpdateController);
+userRouter.put("/", isLogin, userUpdateController);
 
 //DELETE/api/v1/users/:id
 userRouter.delete("/:id", userDeleteController);

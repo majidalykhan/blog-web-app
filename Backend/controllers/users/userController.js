@@ -327,11 +327,46 @@ const userProfileController = async (req, res) => {
 };
 
 //Update
-const userUpdateController = async (req, res) => {
+const userUpdateController = async (req, res, next) => {
+  const { email, firstName, lastName } = req.body;
+  try {
+    //Check if email is not taken
+    if (email) {
+      const emailTaken = await User.findOne({ email });
+      if (emailTaken) {
+        return next(appErr("Email is already taken", 400));
+      }
+    }
+
+    //Update the user
+    const user = await User.findByIdAndUpdate(
+      req.userAuth,
+      {
+        firstName,
+        lastName,
+        email,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.json({
+      status: "success",
+      data: user,
+    });
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
+//Update password
+const UpdatePasswordController = async (req, res) => {
   try {
     res.json({
       status: "success",
-      data: "update user route",
+      data: "update password",
     });
   } catch (error) {
     res.json(error.message);
