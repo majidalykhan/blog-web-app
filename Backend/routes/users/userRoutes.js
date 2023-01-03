@@ -17,7 +17,7 @@ const {
 } = require("../../controllers/users/userController");
 const isLogin = require("../../middlewares/isLogin");
 const multer = require("multer");
-
+const isAdmin = require("../../middlewares/isAdmin");
 //Instance of multer
 const upload = multer({ storage });
 
@@ -57,7 +57,7 @@ userRouter.get("/block/:id", isLogin, blockUserController);
 userRouter.get("/unblock/:id", isLogin, unblockUserController);
 
 //GET/api/v1/users/admin-block/:id
-userRouter.put("/admin-block/:id", isLogin, adminBlockUserController);
+userRouter.put("/admin-block/:id", isLogin, isAdmin, adminBlockUserController);
 
 //POST/api/v1/users/profile-photo-upload
 userRouter.post(

@@ -267,6 +267,8 @@ const adminBlockUserController = async (req, res, next) => {
     }
     //3. Change the isBlocked to true
     userToBeBlocked.isBlocked = true;
+    //4.Save
+    await userToBeBlocked.save();
     res.json({
       status: "success",
       data: "You have successfully blocked the user",
