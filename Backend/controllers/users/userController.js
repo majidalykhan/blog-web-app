@@ -2,7 +2,6 @@ const bcrypt = require("bcrypt");
 const User = require("../../model/User/User");
 const appErr = require("../../utils/appErr");
 const generateToken = require("../../utils/generateToken");
-const getTokenFromHeader = require("../../utils/getTokenFromHeader");
 
 //Register
 const userRegisterController = async (req, res, next) => {
@@ -185,6 +184,41 @@ const unfollowController = async (req, res, next) => {
   }
 };
 
+//Block user
+const blockUserController = async (req, res, next) => {
+  try {
+    //1. Find the user to be blocked
+    const userToBeBlocked = await User.findById(req.params.id);
+
+    //2. Find the user who is blocking
+    const userWhoBlocked = await User.findById(req.userAuth);
+
+    //3. Check if userToBeBlocked and userWhoBlocked are found
+    if (userToBeBlocked && userWhoBlocked) {
+      //4. Check if userWhoBlocked is already in users blocked array
+      const isUserAlreadyBlocked = userWhoBlocked.blocked.find(
+        (blocked) => blocked.toString() === userToBeBlocked._id.toString()
+      );
+      if (isUserAlreadyBlocked) {
+        return next(appErr("You already blocked this user"));
+      } else {
+        //5. Push the userToBeBlocked to userWhoBlocked's blocked array
+        userWhoBlocked.blocked.push(userToBeBlocked._id);
+
+        //6. Save
+        await userWhoBlocked.save();
+
+        res.json({
+          status: "success",
+          data: "You have successfully blocked this user",
+        });
+      }
+    }
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
 //Get users
 const usersController = async (req, res) => {
   try {
@@ -285,4 +319,5 @@ module.exports = {
   whoViewedMyProfileController,
   followingController,
   unfollowController,
+  blockUserController,
 };
