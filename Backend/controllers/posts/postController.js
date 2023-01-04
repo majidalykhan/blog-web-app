@@ -1,17 +1,23 @@
 const Post = require("../../model/Post/Post");
 const User = require("../../model/User/User");
+const appErr = require("../../utils/appErr");
 
 //Create
 const postCreateController = async (req, res, next) => {
-  const { title, description } = req.body;
+  const { title, description, category } = req.body;
   try {
     //FInd the user
     const author = await User.findById(req.userAuth);
+    //Check if user is blocked
+    if (author.isBlocked) {
+      return next(appErr("Access denied, Account is blocked", 403));
+    }
     //Create the post
     const postCreated = await Post.create({
       title,
       description,
       user: author._id,
+      category,
     });
     //Associate user to a post - Push post into user posts field
     author.posts.push(postCreated);
