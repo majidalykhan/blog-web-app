@@ -69,6 +69,31 @@ const postsGetController = async (req, res) => {
   }
 };
 
+//Toggle Like
+const toggleLikesPostController = async (req, res) => {
+  try {
+    //1. Get the post
+    const post = await Post.findById(req.params.id);
+    //2. Check if the user has already liked the post
+    const isLiked = post.likes.includes(req.userAuth);
+    //3. If user has already liked the post, unlike it
+    if (isLiked) {
+      post.likes = post.likes.filter((like) => like.toString() !== req.userAuth.toString());
+      await post.save();
+    } else {
+      //4. If the user has not liked the post, like it
+      post.likes.push(req.userAuth);
+      await post.save();
+    }
+    res.json({
+      status: "success",
+      data: "You have successfully liked the post",
+    });
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
 //Delete
 const postDeleteController = async (req, res) => {
   try {
@@ -99,4 +124,5 @@ module.exports = {
   postsGetController,
   postDeleteController,
   postUpdateController,
+  toggleLikesPostController,
 };
