@@ -18,7 +18,7 @@ const postSchema = new mongoose.Schema({
     ref: "Category",
     required: [true, "Post Category is required"],
   },
-  numVIews: [
+  numViews: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

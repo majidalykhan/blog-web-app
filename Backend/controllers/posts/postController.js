@@ -32,13 +32,29 @@ const postCreateController = async (req, res, next) => {
   }
 };
 
-//Get post
+//Single
 const postGetController = async (req, res) => {
   try {
-    res.json({
-      status: "success",
-      data: "single post route",
-    });
+    //Get the post
+    const post = await Post.findById(req.params.id);
+    //Number of views
+    //Check if user already viewed the post
+    const isViewed = post.numViews.includes(req.userAuth);
+    if (isViewed) {
+      res.json({
+        status: "success",
+        data: post,
+      });
+    } else {
+      //Push the user into numOfViews
+      post.numViews.push(req.userAuth);
+      //Save
+      post.save();
+      res.json({
+        status: "success",
+        data: post,
+      });
+    }
   } catch (error) {
     res.json(error.message);
   }

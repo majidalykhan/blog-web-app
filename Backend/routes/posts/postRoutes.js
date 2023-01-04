@@ -22,7 +22,7 @@ postRouter.get("/likes/:id", isLogin, toggleLikesPostController);
 postRouter.get("/dislikes/:id", isLogin, toggleDislikesPostController);
 
 //GET/api/v1/posts/:id
-postRouter.get("/:id", postGetController);
+postRouter.get("/:id", isLogin, postGetController);
 
 //GET/api/v1/posts
 postRouter.get("/", isLogin, postsGetController);
