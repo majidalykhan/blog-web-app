@@ -38,7 +38,7 @@ const userRegisterController = async (req, res, next) => {
 };
 
 //Login
-const userLoginController = async (req, res) => {
+const userLoginController = async (req, res, next) => {
   const { email, password } = req.body;
 
   //Check if email exist

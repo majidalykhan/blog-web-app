@@ -6,10 +6,11 @@ const {
   categoryDeleteController,
   categoryUpdateController,
 } = require("../../controllers/categories/categoryController");
+const isLogin = require("../../middlewares/isLogin");
 const categoryRouter = express.Router();
 
 //POST/api/v1/categories
-categoryRouter.post("/", categoryCreateController);
+categoryRouter.post("/", isLogin, categoryCreateController);
 
 //GET/api/v1/categories/:id
 categoryRouter.get("/:id", categoryGetController);

@@ -1,12 +1,17 @@
+const Category = require("../../model/Category/Category");
+const appErr = require("../../utils/appErr");
+
 //Create
-const categoryCreateController = async (req, res) => {
+const categoryCreateController = async (req, res, next) => {
+  const { title } = req.body;
   try {
+    const category = await Category.create({ title, user: req.userAuth });
     res.json({
       status: "success",
-      data: "category created",
+      data: category,
     });
   } catch (error) {
-    res.json(error.message);
+    return next(appErr(error.message));
   }
 };
 
