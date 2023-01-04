@@ -78,7 +78,9 @@ const toggleLikesPostController = async (req, res) => {
     const isLiked = post.likes.includes(req.userAuth);
     //3. If user has already liked the post, unlike it
     if (isLiked) {
-      post.likes = post.likes.filter((like) => like.toString() !== req.userAuth.toString());
+      post.likes = post.likes.filter(
+        (like) => like.toString() !== req.userAuth.toString()
+      );
       await post.save();
     } else {
       //4. If the user has not liked the post, like it
@@ -87,7 +89,34 @@ const toggleLikesPostController = async (req, res) => {
     }
     res.json({
       status: "success",
-      data: "You have successfully liked the post",
+      data: post,
+    });
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
+//Toggle dislike
+const toggleDislikesPostController = async (req, res) => {
+  try {
+    //1. Get the post
+    const post = await Post.findById(req.params.id);
+    //2. Check if the user has already unliked the post
+    const isdisliked = post.dislikes.includes(req.userAuth);
+    //3. If user has already disliked the post, like it
+    if (isdisliked) {
+      post.dislikes = post.dislikes.filter(
+        (disLike) => disLike.toString() !== req.userAuth.toString()
+      );
+      await post.save();
+    } else {
+      //4. If the user has not liked the post, like it
+      post.dislikes.push(req.userAuth);
+      await post.save();
+    }
+    res.json({
+      status: "success",
+      data: post,
     });
   } catch (error) {
     res.json(error.message);
@@ -125,4 +154,5 @@ module.exports = {
   postDeleteController,
   postUpdateController,
   toggleLikesPostController,
+  toggleDislikesPostController,
 };

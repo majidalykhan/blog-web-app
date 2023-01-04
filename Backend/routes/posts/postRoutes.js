@@ -6,6 +6,7 @@ const {
   postDeleteController,
   postUpdateController,
   toggleLikesPostController,
+  toggleDislikesPostController,
 } = require("../../controllers/posts/postController");
 const isLogin = require("../../middlewares/isLogin");
 
@@ -16,6 +17,9 @@ postRouter.post("/", isLogin, postCreateController);
 
 //GET/api/v1/posts/likes/:id
 postRouter.get("/likes/:id", isLogin, toggleLikesPostController);
+
+//GET/api/v1/posts/likes/:id
+postRouter.get("/dislikes/:id", isLogin, toggleDislikesPostController);
 
 //GET/api/v1/posts/:id
 postRouter.get("/:id", postGetController);
