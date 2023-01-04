@@ -17,7 +17,7 @@ postRouter.post("/", isLogin, postCreateController);
 postRouter.get("/:id", postGetController);
 
 //GET/api/v1/posts
-postRouter.get("/", postsGetController);
+postRouter.get("/", isLogin, postsGetController);
 
 postRouter.delete("/:id", postDeleteController);
 

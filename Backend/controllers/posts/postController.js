@@ -47,9 +47,22 @@ const postGetController = async (req, res) => {
 //All posts
 const postsGetController = async (req, res) => {
   try {
+    //Find all posts
+    const posts = await Post.find({})
+      .populate("user")
+      .populate("category", "title");
+
+    //Check if user is blocked by post owner
+    const filteredPosts = posts.filter((post) => {
+      //get all blocked users
+      const blockedUsers = post.user.blocked;
+      const isBlocked = blockedUsers.includes(req.userAuth);
+
+      return isBlocked ? null : post;
+    });
     res.json({
       status: "success",
-      data: "all posts route",
+      data: filteredPosts,
     });
   } catch (error) {
     res.json(error.message);
