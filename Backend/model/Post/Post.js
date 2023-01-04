@@ -60,6 +60,16 @@ postSchema.pre(/^find/, function (next) {
     const post = this;
     return post.numViews.length;
   });
+  //Add likes count as virtual field
+  postSchema.virtual("likesCount").get(function () {
+    const post = this;
+    return post.likes.length;
+  });
+  //Add dislikes count as virtual field
+  postSchema.virtual("dislikesCount").get(function () {
+    const post = this;
+    return post.dislikes.length;
+  });
   next();
 });
 
