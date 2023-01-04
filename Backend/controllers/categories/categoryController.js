@@ -16,7 +16,7 @@ const categoryCreateController = async (req, res, next) => {
 };
 
 //All category get
-const categoriesGetController = async (req, res) => {
+const categoriesGetController = async (req, res, next) => {
   try {
     const categories = await Category.find();
     res.json({
@@ -24,12 +24,12 @@ const categoriesGetController = async (req, res) => {
       data: categories,
     });
   } catch (error) {
-    res.json(error.message);
+    return next(appErr(error.message));
   }
 };
 
 //Category get
-const categoryGetController = async (req, res) => {
+const categoryGetController = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id);
     res.json({
@@ -37,24 +37,25 @@ const categoryGetController = async (req, res) => {
       data: category,
     });
   } catch (error) {
-    res.json(error.message);
+    return next(appErr(error.message));
   }
 };
 
 //Delete
-const categoryDeleteController = async (req, res) => {
+const categoryDeleteController = async (req, res, next) => {
   try {
+    await Category.findByIdAndDelete(req.params.id);
     res.json({
       status: "success",
-      data: "delete category route",
+      data: "Category deleted successfully",
     });
   } catch (error) {
-    res.json(error.message);
+    return next(appErr(error.message));
   }
 };
 
 //Update
-const categoryUpdateController = async (req, res) => {
+const categoryUpdateController = async (req, res, next) => {
   const { title } = req.body;
   try {
     const category = await Category.findByIdAndUpdate(
@@ -67,7 +68,7 @@ const categoryUpdateController = async (req, res) => {
       data: category,
     });
   } catch (error) {
-    res.json(error.message);
+    return next(appErr(error.message));
   }
 };
 
