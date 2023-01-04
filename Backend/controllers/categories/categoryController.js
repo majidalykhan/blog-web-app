@@ -55,10 +55,16 @@ const categoryDeleteController = async (req, res) => {
 
 //Update
 const categoryUpdateController = async (req, res) => {
+  const { title } = req.body;
   try {
+    const category = await Category.findByIdAndUpdate(
+      req.params.id,
+      { title },
+      { new: true, runValidators: true }
+    );
     res.json({
       status: "success",
-      data: "update category route",
+      data: category,
     });
   } catch (error) {
     res.json(error.message);
