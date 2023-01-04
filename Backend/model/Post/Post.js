@@ -70,6 +70,21 @@ postSchema.pre(/^find/, function (next) {
     const post = this;
     return post.dislikes.length;
   });
+  //Check the most liked post in percentage
+  postSchema.virtual("likesPercentage").get(function () {
+    const post = this;
+    const total = +post.likes.length + +post.dislikes.length;
+    const percentage = (post.likes.length / total) * 100;
+    return `${percentage}%`;
+  });
+  //Check the most disliked post in percentage
+  postSchema.virtual("dislikesPercentage").get(function () {
+    const post = this;
+    const total = +post.dislikes.length + +post.dislikes.length;
+    const percentage = (post.dislikes.length / total) * 100;
+    return `${percentage}%`;
+  });
+
   next();
 });
 
