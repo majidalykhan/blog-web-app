@@ -12,12 +12,14 @@ const postCreateController = async (req, res, next) => {
     if (author.isBlocked) {
       return next(appErr("Access denied, Account is blocked", 403));
     }
+
     //Create the post
     const postCreated = await Post.create({
       title,
       description,
       user: author._id,
       category,
+      photo: req?.file?.path,
     });
     //Associate user to a post - Push post into user posts field
     author.posts.push(postCreated);
