@@ -15,6 +15,19 @@ const categoryCreateController = async (req, res, next) => {
   }
 };
 
+//All category get
+const categoriesGetController = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.json({
+      status: "success",
+      data: categories,
+    });
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
 //Category get
 const categoryGetController = async (req, res) => {
   try {
@@ -56,4 +69,5 @@ module.exports = {
   categoryGetController,
   categoryDeleteController,
   categoryUpdateController,
+  categoriesGetController,
 };
