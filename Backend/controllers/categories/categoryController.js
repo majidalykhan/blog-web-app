@@ -31,9 +31,10 @@ const categoriesGetController = async (req, res) => {
 //Category get
 const categoryGetController = async (req, res) => {
   try {
+    const category = await Category.findById(req.params.id);
     res.json({
       status: "success",
-      data: "category route",
+      data: category,
     });
   } catch (error) {
     res.json(error.message);
