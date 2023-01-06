@@ -33,7 +33,7 @@ postRouter.get("/:id", isLogin, postGetController);
 //GET/api/v1/posts
 postRouter.get("/", isLogin, postsGetController);
 
-postRouter.delete("/:id", postDeleteController);
+postRouter.delete("/:id", isLogin, postDeleteController);
 
 postRouter.put("/:id", postUpdateController);
 

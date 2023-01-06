@@ -142,11 +142,18 @@ const toggleDislikesPostController = async (req, res) => {
 };
 
 //Delete
-const postDeleteController = async (req, res) => {
+const postDeleteController = async (req, res, next) => {
   try {
+    //Find the post
+    const post = await Post.findById(req.params.id);
+    //Check if the post belongs to user
+    if (post.user.toString() !== req.userAuth.toString()) {
+      return next(appErr("You are not allowed to delete the post", 403));
+    }
+    await Post.findByIdAndDelete(req.params.id);
     res.json({
       status: "success",
-      data: "delete post route",
+      data: "Post deleted successfully",
     });
   } catch (error) {
     res.json(error.message);
