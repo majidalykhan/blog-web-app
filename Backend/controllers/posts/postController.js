@@ -1,3 +1,4 @@
+const Comment = require("../../model/Comment/Comment");
 const Post = require("../../model/Post/Post");
 const User = require("../../model/User/User");
 const appErr = require("../../utils/appErr");
@@ -51,7 +52,7 @@ const postGetController = async (req, res, next) => {
       //Push the user into numOfViews
       post.numViews.push(req.userAuth);
       //Save
-      post.save();
+      await post.save();
       res.json({
         status: "success",
         data: post,
@@ -150,6 +151,15 @@ const postDeleteController = async (req, res, next) => {
     if (post.user.toString() !== req.userAuth.toString()) {
       return next(appErr("You are not allowed to delete the post", 403));
     }
+
+    //In mongodb, the element is deleted from document but not from reference array
+    //Remove posts from array
+    await User.findOneAndUpdate(
+      { posts: post._id },
+      { $pull: { posts: post._id } },
+      { new: true }
+    );
+
     await Post.findByIdAndDelete(req.params.id);
     res.json({
       status: "success",

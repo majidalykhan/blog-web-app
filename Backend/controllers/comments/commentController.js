@@ -35,27 +35,38 @@ const commentCreateController = async (req, res, next) => {
   }
 };
 
-//Comment get
-const commentGetController = async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "comment route",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-};
-
 //Delete
-const commentDeleteController = async (req, res) => {
+const commentDeleteController = async (req, res, next) => {
   try {
+    //Find the comment
+    const comment = await Comment.findById(req.params.id);
+    //Check if the comment belongs to user
+    if (comment.user.toString() !== req.userAuth.toString()) {
+      return next(appErr("You are not allowed to delete this comment", 403));
+    }
+
+    //In mongodb, the element is deleted from document but not from reference array
+    //Remove comments from array
+    await User.findOneAndUpdate(
+      { comments: comment._id },
+      { $pull: { comments: comment._id } },
+      { new: true }
+    );
+
+    await Post.findOneAndUpdate(
+      { comments: comment._id },
+      { $pull: { comments: comment._id } },
+      { new: true }
+    );
+
+    //Remove the comment
+    await Comment.findByIdAndDelete(req.params.id);
     res.json({
       status: "success",
-      data: "delete comment route",
+      data: "Comment has been deleted successfully",
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -69,14 +80,14 @@ const commentUpdateController = async (req, res, next) => {
     if (comment.user.toString() !== req.userAuth.toString()) {
       return next(appErr("You are not allowed to update this comment", 403));
     }
-    const updatedComment = await Comment.findByIdAndUpdate(
+    await Comment.findByIdAndUpdate(
       req.params.id,
       { description },
       { new: true, runValidators: true }
     );
     res.json({
       status: "success",
-      data: updatedComment,
+      data: comment,
     });
   } catch (error) {
     next(appErr(error.message));
@@ -85,7 +96,6 @@ const commentUpdateController = async (req, res, next) => {
 
 module.exports = {
   commentCreateController,
-  commentGetController,
   commentDeleteController,
   commentUpdateController,
 };
