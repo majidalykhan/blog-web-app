@@ -60,14 +60,26 @@ const commentDeleteController = async (req, res) => {
 };
 
 //Update
-const commentUpdateController = async (req, res) => {
+const commentUpdateController = async (req, res, next) => {
+  const { description } = req.body;
   try {
+    //Find the comment
+    const comment = await Comment.findById(req.params.id);
+    //Check if the comment belongs to user
+    if (comment.user.toString() !== req.userAuth.toString()) {
+      return next(appErr("You are not allowed to update this comment", 403));
+    }
+    const updatedComment = await Comment.findByIdAndUpdate(
+      req.params.id,
+      { description },
+      { new: true, runValidators: true }
+    );
     res.json({
       status: "success",
-      data: "update comment route",
+      data: updatedComment,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 

@@ -168,7 +168,7 @@ const postUpdateController = async (req, res, next) => {
     const post = await Post.findById(req.params.id);
     //Check if the post belongs to user
     if (post.user.toString() !== req.userAuth.toString()) {
-      return next(appErr("You are not allowed to update the post", 403));
+      return next(appErr("You are not allowed to update this post", 403));
     }
     await Post.findByIdAndUpdate(
       req.params.id,

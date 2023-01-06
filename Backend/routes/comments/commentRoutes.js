@@ -18,6 +18,6 @@ commentRouter.get("/:id", commentGetController);
 commentRouter.delete("/:id", commentDeleteController);
 
 //PUT/api/v1/comments/:id
-commentRouter.put("/:id", commentUpdateController);
+commentRouter.put("/:id", isLogin, commentUpdateController);
 
 module.exports = commentRouter;
