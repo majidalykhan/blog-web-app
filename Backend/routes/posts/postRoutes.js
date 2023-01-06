@@ -33,8 +33,10 @@ postRouter.get("/:id", isLogin, postGetController);
 //GET/api/v1/posts
 postRouter.get("/", isLogin, postsGetController);
 
+//DELETE/api/v1/posts/:id
 postRouter.delete("/:id", isLogin, postDeleteController);
 
-postRouter.put("/:id", postUpdateController);
+//UPDATE/api/v1/posts/:id
+postRouter.put("/:id", isLogin, upload.single("image"), postUpdateController);
 
 module.exports = postRouter;
