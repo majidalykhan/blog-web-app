@@ -61,6 +61,12 @@ const userSchema = new mongoose.Schema(
         ref: "Post",
       },
     ],
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "COmment",
+      },
+    ],
     blocked: [
       {
         type: mongoose.Schema.Types.ObjectId,
