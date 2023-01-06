@@ -35,7 +35,7 @@ const postCreateController = async (req, res, next) => {
 };
 
 //Single
-const postGetController = async (req, res) => {
+const postGetController = async (req, res, next) => {
   try {
     //Get the post
     const post = await Post.findById(req.params.id);
@@ -58,12 +58,12 @@ const postGetController = async (req, res) => {
       });
     }
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
 //All posts
-const postsGetController = async (req, res) => {
+const postsGetController = async (req, res, next) => {
   try {
     //Find all posts
     const posts = await Post.find({})
@@ -83,12 +83,12 @@ const postsGetController = async (req, res) => {
       data: filteredPosts,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
 //Toggle Like
-const toggleLikesPostController = async (req, res) => {
+const toggleLikesPostController = async (req, res, next) => {
   try {
     //1. Get the post
     const post = await Post.findById(req.params.id);
@@ -110,12 +110,12 @@ const toggleLikesPostController = async (req, res) => {
       data: post,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
 //Toggle dislike
-const toggleDislikesPostController = async (req, res) => {
+const toggleDislikesPostController = async (req, res, next) => {
   try {
     //1. Get the post
     const post = await Post.findById(req.params.id);
@@ -137,7 +137,7 @@ const toggleDislikesPostController = async (req, res) => {
       data: post,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -156,7 +156,7 @@ const postDeleteController = async (req, res, next) => {
       data: "Post deleted successfully",
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -187,7 +187,7 @@ const postUpdateController = async (req, res, next) => {
       data: post,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
